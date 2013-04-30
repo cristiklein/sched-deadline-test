@@ -92,7 +92,7 @@
     int ret = sched_setscheduler2(tid, SCHED_DEADLINE, &param2);
     #ifdef _DEBUG
       if (ret != 0)
-        fprintf(stderr, "Error in sched_setscheduler2 for pid %d, vp %f, runtime %d, errno %d\n", tid, vp, param2.sched_runtime, errno);
+        fprintf(stderr, "Error in sched_setscheduler2 for pid %d, vp %f, runtime %llu, errno %d\n", tid, vp, param2.sched_runtime, errno);
     #endif
     return ret;
   }
@@ -248,7 +248,7 @@
       for(id_counter = 0; id_counter < num_applications; id_counter++) {
         _application_h* a = monitor_application_init((int) apps[id_counter].tid);
         if (a!=NULL) {
-          fprintf(logfile, "%lld, %d, %f, %f, %f\n", 
+          fprintf(logfile, "%llu, %d, %f, %f, %f\n", 
             current_time, apps[id_counter].tid, apps[id_counter].vp,
             apps[id_counter].performance, apps[id_counter].weight);
           monitor_application_stop(a);

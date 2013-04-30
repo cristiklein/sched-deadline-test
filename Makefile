@@ -5,3 +5,7 @@ all: processperfstat
 
 processperfstat: processperfstat.o
 
+processperfstat.o: processperfstat.cc doMath.hh
+
+clean:
+	rm -rf *.o processperfstat

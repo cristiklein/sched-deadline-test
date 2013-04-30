@@ -1,7 +1,10 @@
 #include <boost/program_options.hpp>
 #include <iostream>
+#include <stdint.h>
 #include <stdio.h>
 #include <sys/time.h>
+
+#include "doMath.hh"
 
 double inline now()
 {
@@ -10,13 +13,12 @@ double inline now()
 	return t.tv_usec / 1000000.0 + t.tv_sec;
 }
 
+
 int main(int argc, char **argv)
 {
 	/* Initialize */
-	long numFlopPerIteration = 1000;
-	long numIterations = -1; /* i.e., infinity */
-	volatile double a = 1.1;
-	volatile double b = 1.1; /* we are going to operate on these numbers quite a few times */
+	long numIterations = 100000;
+	double residual = 1.1;
 
 	/* Parse command-line */
 	namespace po = boost::program_options;
@@ -24,8 +26,7 @@ int main(int argc, char **argv)
 	po::options_description desc("Process performance statistics");
 	desc.add_options()
 		("help", "display this help message")
-		("flop", po::value<long>(&numFlopPerIteration), "set number of floating-point operations per iteration (default: 1000)")
-		("iterations", po::value<long>(&numIterations), "set number of iterations (default: infinity)")
+		("iterations", po::value<long>(&numIterations), "set number of iterations (default: 100000)")
 	;
 
 	po::variables_map vm;
@@ -42,25 +43,23 @@ int main(int argc, char **argv)
 	/* NOTE: we make the assumptions that numFlopPerIteration is high enough
 	 * to render all other computations / calls negligible */
 	double lastReport = now();
-	int numFlopSinceLastReport = 0;
-	for (long i = 0; i < numIterations || numIterations == -1; i++) {
-		for (long j = 0; j < numFlopPerIteration; j++) {
-			a *= b;
-		}
-		numFlopSinceLastReport += numFlopPerIteration;
+	uint64_t numFlopSinceLastReport = 0;
+	for (int i = 0; i < 10000000 /* avoid optimizations */; i++) {
+		residual += test_dp_mac_SSE(numIterations);
+		numFlopSinceLastReport += 48 * 1000 * numIterations * 2;
 
 		/* Display statistics */
 		double currentTime = now();
 		double timeDifference = currentTime - lastReport;
 		if (timeDifference >= 1) {
-			printf("[%.06f] %f\n", currentTime, numFlopSinceLastReport / timeDifference);
+			printf("[%.06f] %.2f GFLOPS\n", currentTime, numFlopSinceLastReport / timeDifference / 1000000000);
 			lastReport = currentTime;
 			numFlopSinceLastReport = 0;
 		}
 	}
 
 	/* Trick compiler */
-	fprintf(stderr, "Residual: %f\n", a);
+	fprintf(stderr, "Residual: %f\n", residual);
 
 	return 0;
 }

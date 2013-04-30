@@ -248,7 +248,7 @@
       for(id_counter = 0; id_counter < num_applications; id_counter++) {
         _application_h* a = monitor_application_init((int) apps[id_counter].tid);
         if (a!=NULL) {
-          fprintf(logfile, "%llu, %d, %f, %f, %f\n", 
+          fprintf(logfile, "%ld, %d, %f, %f, %f\n", 
             current_time, apps[id_counter].tid, apps[id_counter].vp,
             apps[id_counter].performance, apps[id_counter].weight);
           monitor_application_stop(a);

@@ -21,6 +21,8 @@
 #include <linux/types.h>
 #include <time.h>
 
+#define SCHED_DEADLINE_ABI_COMPATIBLE_WITH "3.8.0-rc7+"
+
 #define SCHED_DEADLINE	6
 
 #define __NR_sched_setparam2 314

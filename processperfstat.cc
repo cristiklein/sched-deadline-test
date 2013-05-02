@@ -17,7 +17,7 @@ double inline now()
 int main(int argc, char **argv)
 {
 	/* Initialize */
-	long numIterations = 100000;
+	long numIterations = 1000;
 	double residual = 1.1;
 
 	/* Parse command-line */
@@ -26,7 +26,7 @@ int main(int argc, char **argv)
 	po::options_description desc("Process performance statistics");
 	desc.add_options()
 		("help", "display this help message")
-		("iterations", po::value<long>(&numIterations), "set number of iterations (default: 100000)")
+		("iterations", po::value<long>(&numIterations), "set number of iterations (default: 1000)")
 	;
 
 	po::variables_map vm;

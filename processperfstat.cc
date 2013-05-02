@@ -39,6 +39,9 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
+	/* Print our PID for control purposes */
+	fprintf(stderr, "My PID: %d\n", getpid());
+
 	/* Do operations and report statistics */
 	/* NOTE: we make the assumptions that numFlopPerIteration is high enough
 	 * to render all other computations / calls negligible */
